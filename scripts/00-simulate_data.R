@@ -9,9 +9,9 @@
 
 #### Workspace setup ####
 library(tidyverse)
-# [...UPDATE THIS...]
 
 #### Simulate data ####
+```{r}
 set.seed(555)
 
 num_obs <- 1000
@@ -33,6 +33,7 @@ us_political_preferences <- tibble(
     gender = if_else(gender == 0, "Male", "Female")
   ) |>
   select(-support_prob, supports_obama, gender, education)
+```
 
 
 
