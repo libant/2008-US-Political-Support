@@ -1,26 +1,19 @@
 #### Preamble ####
-# Purpose: Downloads and saves the data from [...UPDATE THIS...]
-# Author: Rohan Alexander [...UPDATE THIS...]
-# Date: 11 February 2023 [...UPDATE THIS...]
-# Contact: rohan.alexander@utoronto.ca [...UPDATE THIS...]
+# Purpose: Downloads and saves the necessary data 
+# Author: Liban Timir
+# Date: 12 March 2024
+# Contact: liban.timir@mail.utoronto.ca
 # License: MIT
-# Pre-requisites: [...UPDATE THIS...]
-# Any other information needed? [...UPDATE THIS...]
+# Pre-requisites: Download 200mb file titled 'cces_2008_common.dta' from 
+# https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/YUYIVB
 
 
 #### Workspace setup ####
-library(opendatatoronto)
 library(tidyverse)
-# [...UPDATE THIS...]
+library(haven)
 
 #### Download data ####
-# [...ADD CODE HERE TO DOWNLOAD...]
-
-
-
-#### Save data ####
-# [...UPDATE THIS...]
-# change the_raw_data to whatever name you assigned when you downloaded it.
-write_csv(the_raw_data, "inputs/data/raw_data.csv") 
-
+# wvs_data <- read_dta("inputs/data/cces_2008_common.dta")
+# This file is too big to add to this folder and to github. 
+# Follow above instructions and add the file to the specified filepath
          
