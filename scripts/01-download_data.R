@@ -4,16 +4,15 @@
 # Date: 12 March 2024
 # Contact: liban.timir@mail.utoronto.ca
 # License: MIT
-# Pre-requisites: Download 200mb file titled 'cces_2008_common.dta' from 
-# https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/YUYIVB
-
+# Pre-requisites: Download approximately 200mb file titled 
+# 'CES20_Common_OUTPUT_vv.csv' from 
+# https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/E9N6PH
 
 #### Workspace setup ####
 library(tidyverse)
-library(haven)
 
 #### Download data ####
-# wvs_data <- read_dta("inputs/data/cces_2008_common.dta")
+# ces2020_data <- read_csv("/Users/victortimir/Downloads/dataverse_files/CES20_Common_OUTPUT_vv.csv")
 # This file is too big to add to this folder and to github. 
 # Follow above instructions and add the file to the specified filepath
          
