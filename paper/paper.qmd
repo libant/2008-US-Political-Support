@@ -1,11 +1,9 @@
 ---
-title: "My title"
-subtitle: "My subtitle if needed"
+title: "Deciphering Political Support in the 2008 United States Election"
 author: 
-  - First author
-  - Another author
-thanks: "Code and data are available at: LINK."
-date: today
+  - Liban Timir
+thanks: "Code and data are available at: https://github.com/libant/US-Political-Support-Analysis"
+date: 03-12-2024
 date-format: long
 abstract: "First sentence. Second sentence. Third sentence. Fourth sentence."
 format: pdf
@@ -25,6 +23,15 @@ library(palmerpenguins)
 
 # Introduction
 
+In the contemporary political landscape of the United States, marked by increasing polarization, understanding the foundations of political support has never been more crucial. The Cooperative Election Study (CES) of 2008 presents a dataset to explore this phenomenon. This dataset not only captures a wide array of sociopolitical attitudes and behaviors but also provides insights into the demographic and socioeconomic factors that influence political support. This offers a valuable lens through which to examine the complex dynamics of political engagement.
+
+This study aims to fill a critical gap in the existing literature on political support in the United States by leveraging the CES 2008 data to examine the role of sociodemographic factors in shaping political preferences and behaviors. Previous research, while extensive, has often focused on more generalized measures of political engagement or on specific demographic groups, without fully addressing the multifaceted nature of political support across the nation's diverse populace. This paper seeks to dissect the nuanced ways in which factors such as gender and education predict political support, thereby providing a more detailed understanding of American political behavior.
+
+Our findings reveal significant correlations between sociodemographic characteristics and political support, underscoring the complexity of political engagement in the United States. These results not only highlight the importance of demographic factors in predicting political preferences but also illustrate the varied nature of political support across different segments of the American population. Additionally, the study identifies key issues, including economic policy and social justice, as crucial determinants of political support, offering new insights into the priorities and concerns that drive political behavior in the United States.
+
+The paper begins with an overview of the CES 2008 dataset and the methods employed in our analysis, followed by a presentation of key findings. We conclude with a discussion that contextualizes our results within the broader literature on political support in the United States, comparing our findings to those of Feldman et al. and considering their implications for understanding the dynamics of political support in a highly individualistic and diverse society. Our analysis was conducted using the statistical programming language R, utilizing packages such as tidyverse, dplyr, knitr, kableExtra, purrr, psych, car, MASS, and countrycode to facilitate data processing and visualization.
+
+
 You can and should cross-reference sections and sub-sections. We use @citeR and @rohan.
 
 The remainder of this paper is structured as follows. @sec-data....
@@ -32,6 +39,17 @@ The remainder of this paper is structured as follows. @sec-data....
 
 
 # Data {#sec-data}
+
+# Data {#sec-data}
+
+## Data Source and Measurement {#sec-datasource}
+This report utilizes data published by the Cooperative Election Study (CES) based on the U.S 2008 election [@ces2008]. The study aimed to collect representative data from a diverse cross-section of the American population, adhering to the highest ethical standards to ensure participant confidentiality and data integrity. The dataset was last updated in 2010, but only contains observations from 2008. The increased interest in understanding the dynamics of American political behavior during the pivotal 2008 presidential election led to the creation of the CES 2008 dataset. However, a notable limitation of this dataset arises from its method of data collection, primarily done by a variety of academic institutions and research organizations. Consequently, the dataset primarily captures a broad, national perspective, potentially overlooking more granular, local-level political dynamics. This limitation highlights the inherent challenges in capturing comprehensive data on political behavior that span across the diverse and increasingly divided United States. Additionally, the dataset is designed to ensure the anonymity of its respondents, as it collects information on political preferences, voting behavior, and demographic characteristics without including any personally identifiable information, thereby maintaining the confidentiality of individuals' political beliefs.
+
+The CES 2008 dataset contained thousands of unique observations across 477 variable columns, reflecting a wide range of political, demographic, and behavioral data points. However, a significant portion of these variables contained missing values or were not directly relevant to the specific focus of our analysis on voting behavior. In the preliminary cleaning steps, we narrowed our focus to key variables of interest: respondent ID, education, gender, and voting behavior. From these, we derived additional variables where necessary, such as categorizing educational levels for more nuanced analysis. The variables capturing demographic details and voting behavior were retained for their direct relevance to our research questions, while more tangential data points were excluded to make the dataset analysis more focused and clean. 
+
+## Voter Registration
+As outlined in Table 1 (@tbl-registrationsummary), the dataset reveals an average registration rate, highlighting the proportion of the voter that completed the registration process in anticipation of the election. The median registration rate, serving as a more stable measure of central tendency, reflects a high level of readiness among voters to participate in the election. The divergence between the mean and median registration rates may indicate variations in registration practices across different states and demographic groups.
+
 
 Some of our data is of penguins (@fig-bills), from @palmerpenguins.
 
