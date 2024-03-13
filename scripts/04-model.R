@@ -1,11 +1,10 @@
 #### Preamble ####
-# Purpose: Models... [...UPDATE THIS...]
-# Author: Rohan Alexander [...UPDATE THIS...]
-# Date: 11 February 2023 [...UPDATE THIS...]
-# Contact: rohan.alexander@utoronto.ca [...UPDATE THIS...]
+# Purpose: Models the political preference of the voter
+# Author: Liban Timir
+# Date: 12 March 2024
+# Contact: Liban Timir
 # License: MIT
-# Pre-requisites: [...UPDATE THIS...]
-# Any other information needed? [...UPDATE THIS...]
+# Pre-requisites: 01-download_data.R, 02-data_cleaning.R
 
 
 #### Workspace setup ####
@@ -13,25 +12,54 @@ library(tidyverse)
 library(rstanarm)
 
 #### Read data ####
-analysis_data <- read_csv("data/analysis_data/analysis_data.csv")
+ces2008 <-
+  get_dataframe_by_name(
+    filename = "cces_2008_common.dta",
+    dataset = "1902.1/14003",
+    server = "dataverse.harvard.edu",
+    .f = read_dta
+  ) |>
+  select(votereg, CC20_410, gender, educ)
+
+read_dta(ces2008, "cces_2008_common.dta")
 
 ### Model data ####
-first_model <-
+set.seed(555)
+
+ces2008_reduced <- 
+  ces2008 |> 
+  slice_sample(n = 1000)
+
+political_preferences <-
   stan_glm(
-    formula = flying_time ~ length + width,
-    data = analysis_data,
-    family = gaussian(),
+    voted_for ~ gender + education,
+    data = ces2008_reduced,
+    family = binomial(link = "logit"),
     prior = normal(location = 0, scale = 2.5, autoscale = TRUE),
-    prior_intercept = normal(location = 0, scale = 2.5, autoscale = TRUE),
-    prior_aux = exponential(rate = 1, autoscale = TRUE),
-    seed = 853
+    prior_intercept = 
+      normal(location = 0, scale = 2.5, autoscale = TRUE),
+    seed = 555
   )
 
-
-#### Save model ####
+#### Save and read model ####
 saveRDS(
-  first_model,
-  file = "models/first_model.rds"
+  political_preferences,
+  file = "political_preferences.rds"
 )
+
+political_preferences <-
+  readRDS(file = "political_preferences.rds")
+
+#### Results of model ####
+modelsummary(
+  list(
+    "Support Biden" = political_preferences
+  ),
+  statistic = "mad"
+)
+
+modelplot(political_preferences, conf_level = 0.9) +
+  labs(x = "90 per cent credibility interval")
+
 
 
