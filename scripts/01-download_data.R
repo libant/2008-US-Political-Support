@@ -1,5 +1,5 @@
 #### Preamble ####
-# Purpose: Downloads and saves the necessary data 
+# Purpose: Downloads the necessary data 
 # Author: Liban Timir
 # Date: 12 March 2024
 # Contact: liban.timir@mail.utoronto.ca
