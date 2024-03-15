@@ -112,7 +112,7 @@ The significance of this is that there is a considerable level of civic engageme
 ## Data Source, Measurement and Characteristics {#sec-datasource}
 This paper utilizes data published by the Cooperative Election Study (CES) based on the U.S 2020 election [@ces2020]. The study aimed to collect representative data from a diverse cross-section of the American population, adhering to the highest ethical standards to ensure participant confidentiality and data integrity. The dataset was last updated on February 14th 2022. The interest in understanding the dynamics of American political behavior during the pivotal 2020 presidential election led to the creation of the CES 2020 dataset. However, a notable limitation of this dataset comes from its method of data collection, which was done by 60 research teams composed of a variety of academic institutions and organizations. Consequently, the dataset primarily captures a broad perspective on the nation's politics, potentially overlooking more granular, local-level political dynamics. This limitation highlights the inherent challenges in capturing comprehensive data on political behavior that span across the diverse and increasingly divided United States. Additionally, the dataset is designed to ensure the anonymity of its respondents, as it collects information on political preferences, voting behavior, and demographic characteristics without including any personally identifiable information, thereby maintaining the confidentiality of individuals' political beliefs.
 
-The CES 2020 dataset contained a sample size of approximately 61,000 cases. This extensive collection reflects a broad spectrum of variables, covering political, demographic, and socio-economic data points. Nevertheless, it was noted that certain variables had missing values or were not directly related to my examination. In the initial stages of data cleaning, attention was concentrated on crucial variables such as voter identification, voter registration status, race, and income. Variables that closely corresponded to this paper, including those related to demographics and electoral participation, were prioritized. Whereas, variables with less direct relevance to the paper were omitted to efficiently analyze the dataset.
+The CES 2020 dataset contained a sample size of approximately 61,000 cases. This extensive collection reflects a broad spectrum of variables, covering political, demographic, and socio-economic data points. Nevertheless, it was noted that certain variables had missing values or were not directly related to my examination. In the initial stages of data cleaning, attention was concentrated on crucial variables such as voter identification, voter registration status, presidential preferences, voter turnout, race, and income. Variables that closely corresponded to this paper, including those related to demographics and electoral participation, were prioritized. Whereas, variables with less direct relevance to the paper were omitted to efficiently analyze the dataset.
 
 ## Voter Registration
 As outlined in Table 1 (@tbl-registrationsummary), there is a notable level of engagement among the electorate with a substantial proportion completing the registration process prior to the election. The calculated statistics, including the total number of participants, the count of registered voters, and the percentage of those registered, elucidate the readiness and eagerness of the population to participate in the electoral process. The median registration rate, not directly calculated in the code but inferable from the distribution of the registration percentages across different groups, likely serves as a robust indicator of this preparedness. The variations in registration rates, potentially inferred from the analysis by race, income, and other demographics (as structured in the code for race and income, but could be extended to other variables), may reveal discrepancies in registration practices and levels of electoral engagement among diverse segments of the population. This detailed breakdown by key demographics highlights the disparities and patterns of voter registration, offering insights into the dynamics of electoral participation across different states and demographic cohorts.
@@ -293,9 +293,8 @@ analysis_data |>
 
 Talk way more about it. 
 
-
-
 # Model
+To investigate the factors influencing voting behavior within the Cooperative Election Study (CES) 2020 dataset, we employed a logistic regression model, leveraging the `rstanarm` package of @rstanarm for its Bayesian inference capabilities. This choice allows for a more nuanced interpretation of results, incorporating prior beliefs and providing probabilistic estimates of the parameters. Secondly, this model aims to unpack the impact of demographic variables such as race and income on the probability of an individual casting a vote, framed within a binary outcome (voted vs. did not vote). The overarching goal of our modeling strategy is to distill the complex interplay of these demographic variables, helping our understanding of voting behaviors.
 
 The goal of our modelling strategy is twofold. Firstly,...
 
@@ -303,21 +302,21 @@ Here we briefly describe the Bayesian analysis model used to investigate... Back
 
 ## Model set-up
 
-Define $y_i$ as the number of seconds that the plane remained aloft. Then $\beta_i$ is the wing width and $\gamma_i$ is the wing length, both measured in millimeters.  
+Define $y_i$ as the political preference of the respondent and equal to 1 if Biden and 0 if Trump. Then $\mbox{race}_i$ is the race of the respondent and $\mbox{income}_i$ is the income of the respondent.  
 
-\begin{align} 
-y_i|\mu_i, \sigma &\sim \mbox{Normal}(\mu_i, \sigma) \\
-\mu_i &= \alpha + \beta_i + \gamma_i\\
-\alpha &\sim \mbox{Normal}(0, 2.5) \\
-\beta &\sim \mbox{Normal}(0, 2.5) \\
-\gamma &\sim \mbox{Normal}(0, 2.5) \\
-\sigma &\sim \mbox{Exponential}(1)
-\end{align}
+\begin{aligned}
+y_i|\pi_i & \sim \mbox{Bern}(\pi_i) \\
+\mbox{logit}(\pi_i) & = \beta_0+\beta_1 \times \mbox{race}_i + \beta_2 \times \mbox{income}_i \\
+\beta_0 & \sim \mbox{Normal}(0, 2.5)\\
+\beta_1 & \sim \mbox{Normal}(0, 2.5)\\
+\beta_2 & \sim \mbox{Normal}(0, 2.5)
+\end{aligned}
 
 We run the model in R [@citeR] using the `rstanarm` package of @rstanarm. We use the default priors from `rstanarm`.
 
 
 ### Model justification
+For our model, we expect more minorities to vote for Biden based on his campaign. We also expect there to be a considerable effect of income. We intend to investigate how these demographic factors may influence the probability of individuals voting for a particular candidate. To convey these relationships mathematically, we can represent them using LaTeX within dollar signs, such as $\beta_1$ for the effect of race and $\beta_2$ for the effect of income.
 
 We expect a positive relationship between the size of the wings and time spent aloft. In particular...
 
