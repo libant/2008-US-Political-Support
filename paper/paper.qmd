@@ -1,5 +1,5 @@
 ---
-title: "Deciphering Political Support in the 2008 United States Election"
+title: "Deciphering the Relationship Betweeen Race, Income, and Political Support in the 2020 United States Election"
 author: 
   - Liban Timir
 thanks: "Code and data are available at: https://github.com/libant/US-Political-Support-Analysis"
@@ -23,13 +23,13 @@ library(palmerpenguins)
 
 # Introduction
 
-In the contemporary political landscape of the United States, marked by increasing polarization, understanding the foundations of political support has never been more crucial. The Cooperative Election Study (CES) of 2008 presents a dataset to explore this phenomenon. This dataset not only captures a wide array of sociopolitical attitudes and behaviors but also provides insights into the demographic and socioeconomic factors that influence political support. This offers a valuable lens through which to examine the complex dynamics of political engagement.
+In the contemporary political landscape of the United States, marked by increasing polarization, understanding the foundations of political support has never been more crucial. The Cooperative Election Study (CES) of 2020 presents a dataset to explore this phenomenon. This dataset not only captures a wide array of sociopolitical attitudes and behaviors but also provides insights into the demographic and socioeconomic factors that influence political support. This offers a valuable lens through which to examine the complex dynamics of political engagement.
 
-This study aims to fill a critical gap in the existing literature on political support in the United States by leveraging the CES 2008 data to examine the role of sociodemographic factors in shaping political preferences and behaviors. Previous research, while extensive, has often focused on more generalized measures of political engagement or on specific demographic groups, without fully addressing the multifaceted nature of political support across the nation's diverse populace. This paper seeks to dissect the nuanced ways in which factors such as gender and education predict political support, thereby providing a more detailed understanding of American political behavior.
+This study aims to fill a critical gap in the existing literature on political support in the United States by leveraging the CES 2020 data to examine the role of sociodemographic factors in shaping political preferences and behaviors. Previous research, while extensive, has often focused on more generalized measures of political engagement or on specific demographic groups, without fully addressing the multifaceted nature of political support across the nation's diverse populace. This paper seeks to dissect the nuanced ways in which factors such as race and income predict political support, thereby providing a more detailed understanding of American political behavior.
 
-Our findings reveal significant correlations between sociodemographic characteristics and political support, underscoring the complexity of political engagement in the United States. These results not only highlight the importance of demographic factors in predicting political preferences but also illustrate the varied nature of political support across different segments of the American population. Additionally, the study identifies key issues, including economic policy and social justice, as crucial determinants of political support, offering new insights into the priorities and concerns that drive political behavior in the United States.
+Our findings reveal significant correlations between sociodemographic characteristics and political support, highlighting the complexity of political engagement in the United States. These results not only highlight the importance of demographic factors in predicting political preferences but also illustrate the varied nature of political support across different segments of the American population. Additionally, the study identifies key issues, including economic policy and social justice, as crucial determinants of political support, offering new insights into the priorities and concerns that drive political behavior in the United States.
 
-The paper begins with an overview of the CES 2008 dataset and the methods employed in our analysis, followed by a presentation of key findings. We conclude with a discussion that contextualizes our results within the broader literature on political support in the United States, comparing our findings to those of Feldman et al. and considering their implications for understanding the dynamics of political support in a highly individualistic and diverse society. Our analysis was conducted using the statistical programming language R, utilizing packages such as tidyverse, dplyr, knitr, kableExtra, purrr, psych, car, MASS, and countrycode to facilitate data processing and visualization.
+The paper begins with an overview of the CES 2020 dataset and the methods employed in our data analysis, followed by a presentation of results and key findings. We conclude with a discussion that contextualizes our results within the broader literature on political support in the United States. Our analysis was conducted using the statistical programming language R, utilizing packages such as tidyverse, dplyr, knitr, kableExtra, purrr, psych, car, MASS, and countrycode to facilitate data processing and visualization.
 
 
 You can and should cross-reference sections and sub-sections. We use @citeR and @rohan.
@@ -40,31 +40,234 @@ The remainder of this paper is structured as follows. @sec-data....
 
 # Data {#sec-data}
 
-# Data {#sec-data}
+## Measurement {sec-measurement}
 
-## Data Source and Measurement {#sec-datasource}
-This report utilizes data published by the Cooperative Election Study (CES) based on the U.S 2008 election [@ces2008]. The study aimed to collect representative data from a diverse cross-section of the American population, adhering to the highest ethical standards to ensure participant confidentiality and data integrity. The dataset was last updated in 2010, but only contains observations from 2008. The increased interest in understanding the dynamics of American political behavior during the pivotal 2008 presidential election led to the creation of the CES 2008 dataset. However, a notable limitation of this dataset arises from its method of data collection, primarily done by a variety of academic institutions and research organizations. Consequently, the dataset primarily captures a broad, national perspective, potentially overlooking more granular, local-level political dynamics. This limitation highlights the inherent challenges in capturing comprehensive data on political behavior that span across the diverse and increasingly divided United States. Additionally, the dataset is designed to ensure the anonymity of its respondents, as it collects information on political preferences, voting behavior, and demographic characteristics without including any personally identifiable information, thereby maintaining the confidentiality of individuals' political beliefs.
+## Race
+@ces2020 asked validated American voters "what racial or ethnic group best describes them" based on an 8-item demographic distribution. The survey respondents indicated their responses based on the following options: 
 
-The CES 2008 dataset contained thousands of unique observations across 477 variable columns, reflecting a wide range of political, demographic, and behavioral data points. However, a significant portion of these variables contained missing values or were not directly relevant to the specific focus of our analysis on voting behavior. In the preliminary cleaning steps, we narrowed our focus to key variables of interest: respondent ID, education, gender, and voting behavior. From these, we derived additional variables where necessary, such as categorizing educational levels for more nuanced analysis. The variables capturing demographic details and voting behavior were retained for their direct relevance to our research questions, while more tangential data points were excluded to make the dataset analysis more focused and clean. 
+1. White
+2. Black
+3. Hispanic
+4. Asian
+5. Native American
+6. Middle Eastern
+7. Two or more races
+8. Other
+
+The distribution of survey respondents by race offers a generally diverse portrait of the study's participants, which is crucial for ensuring that the findings are reflective of a diverse population. The largest group of respondents identified as White (N = 44,128), followed by Black (N = 6,952), Hispanic (N = 5,180), and Asian (N = 1,831), with smaller representations from Native American (N = 471), Middle Eastern (N = 84), those identifying with two or more races (N = 1,349), and other racial categories (N = 1,005), totaling a respondent pool of roughly 61,000. 
+
+This racial distribution is significant in ensuring that analyses of societal issues, such as political preferences or policy impacts, are examined through the lens of racial diversity. By acknowledging the racial composition of the respondents, the study strengthens the validity of its conclusions across the different racial and ethnic experiences present within the sample population.
+
+## Income
+@ces2020 asked validated American voters "what was their family's annual income" based on a 17-item demographic distribution. The survey respondents indicated their responses based on the following options: 
+
+1. Less than $10,000
+2. Between $10,000 and $20,000
+3. Between $20,000 and $29,999
+4. Between $30,000 and $39,999
+5. Between $40,000 and $49,999
+6. Between $50,000 and $59,999
+7. Between $60,000 and $69,999
+8. Between $70,000 and $79,999
+9. Between $80,000 and $99,999
+10. Between $100,000 and $119,999
+11. Between $120,000 and $149,999
+12. Between $150,000 and $199,999
+13. Between $200,000 and $249,999
+14. Between $250,000 and $349,999
+15. Between $350,000 and $499,999
+16. $500,000 or more
+17. Prefer not to say
+
+The distribution of survey respondents by income offers a representation across various income categories, capturing the economic diversity within the participant pool. The largest group of respondents identified their income as between $50,000 and $99,999 (N = 18,014), followed by less than $30,000 (N = 14,163), between $30,000 and $49,999 (N = 10,789), between $100,000 and $199,999 (N = 9,780), and $200,000 and above (N = 2160), along with those that preferred not to say (N = 6,075), totaling a respondent pool of roughly 61,000. 
+
+This income distribution is significant in contextualizing the survey results, as economic status often correlates with perspectives on policy, access to resources, and overall life satisfaction. It serves as a critical variable for examination with other demographic factors such as race, enhancing the depth and applicability of the study's findings across different income groups. By encompassing a wide range of income levels, the survey ensures a comprehensive analysis of the correlation between income and key factors such as education and health, thus supporting nuanced interpretations of the data collected.
+
+## Voter Registration, Turnout, and Political Preferences
+@ces2020 asked validadted American voters "are they registered to vote" based on a 3-item demographic distribution. The survey respondents indicated their responses based on the following options:
+
+1. Yes
+2. No
+3. Don't know
+
+@ces2020 also asked "which candidate did they prefer for President of the United States" based on a 4-item demographic distribution. The survey respondents indicated their responses based on the following options: 
+
+1. Joe Biden (Democratic)
+2. Donald Trump (Republican)
+3. Other
+4. Not sure
+
+In regards to voting turnout, @ces2020 asked "which of the following statements best describes them" based on a 5-item demographic distribution. The survey respondents indicated their responses based on the following options: 
+
+1. I did not vote in the election this November
+2. I thought about voting this time – but didn't
+3. I usually vote, but didn't this time
+4. I attempted to vote but did not or could not
+5. I definitely voted in the November 2020 General Election
+
+The distribution of survey respondents captures the voting distribution within the participant pool. Voter turnout was high (N = 45,660), along with a high voter registration (N = 48,225). In regards to the vote itself, out of 5,861 respondents, the majority voted for Biden (N = 2,324).
+
+The significance of this is that there is a considerable level of civic engagement among the survey participants, which is crucial for drawing conclusions about electoral behaviors and political preferences. Additionally, the data shows a significant majority of the survey population are not just eligible voters but are also taking the necessary steps to exercise their voting rights. When it comes to the political preferences themselves, the data is critical as it can be used to inform the public’s response to political platforms, policy preferences, and social issues that resonate with the candidate. High turnout and engagement in this context could also point to a heightened political awareness and mobilization around the time of the survey, presumably influenced by the events at the time.
+
+## Data Source, Measurement and Characteristics {#sec-datasource}
+This paper utilizes data published by the Cooperative Election Study (CES) based on the U.S 2020 election [@ces2020]. The study aimed to collect representative data from a diverse cross-section of the American population, adhering to the highest ethical standards to ensure participant confidentiality and data integrity. The dataset was last updated on February 14th 2022. The interest in understanding the dynamics of American political behavior during the pivotal 2020 presidential election led to the creation of the CES 2020 dataset. However, a notable limitation of this dataset comes from its method of data collection, which was done by 60 research teams composed of a variety of academic institutions and organizations. Consequently, the dataset primarily captures a broad perspective on the nation's politics, potentially overlooking more granular, local-level political dynamics. This limitation highlights the inherent challenges in capturing comprehensive data on political behavior that span across the diverse and increasingly divided United States. Additionally, the dataset is designed to ensure the anonymity of its respondents, as it collects information on political preferences, voting behavior, and demographic characteristics without including any personally identifiable information, thereby maintaining the confidentiality of individuals' political beliefs.
+
+The CES 2020 dataset contained a sample size of approximately 61,000 cases. This extensive collection reflects a broad spectrum of variables, covering political, demographic, and socio-economic data points. Nevertheless, it was noted that certain variables had missing values or were not directly related to my examination. In the initial stages of data cleaning, attention was concentrated on crucial variables such as voter identification, voter registration status, race, and income. Variables that closely corresponded to this paper, including those related to demographics and electoral participation, were prioritized. Whereas, variables with less direct relevance to the paper were omitted to efficiently analyze the dataset.
 
 ## Voter Registration
-As outlined in Table 1 (@tbl-registrationsummary), the dataset reveals an average registration rate, highlighting the proportion of the voter that completed the registration process in anticipation of the election. The median registration rate, serving as a more stable measure of central tendency, reflects a high level of readiness among voters to participate in the election. The divergence between the mean and median registration rates may indicate variations in registration practices across different states and demographic groups.
-
-
-Some of our data is of penguins (@fig-bills), from @palmerpenguins.
+As outlined in Table 1 (@tbl-registrationsummary), there is a notable level of engagement among the electorate with a substantial proportion completing the registration process prior to the election. The calculated statistics, including the total number of participants, the count of registered voters, and the percentage of those registered, elucidate the readiness and eagerness of the population to participate in the electoral process. The median registration rate, not directly calculated in the code but inferable from the distribution of the registration percentages across different groups, likely serves as a robust indicator of this preparedness. The variations in registration rates, potentially inferred from the analysis by race, income, and other demographics (as structured in the code for race and income, but could be extended to other variables), may reveal discrepancies in registration practices and levels of electoral engagement among diverse segments of the population. This detailed breakdown by key demographics highlights the disparities and patterns of voter registration, offering insights into the dynamics of electoral participation across different states and demographic cohorts.
 
 ```{r}
-#| label: fig-bills
-#| fig-cap: Bills of penguins
+#| label: tbl-registrationsummary
+#| tbl-cap: "Summary Statistics of Registered Voters"
 #| echo: false
+options(repos = c(CRAN = "https://cloud.r-project.org"))
 
-ggplot(penguins, aes(x = island, fill = species)) +
-  geom_bar(alpha = 0.8) +
-  scale_fill_manual(values = c("darkorange","purple","cyan4"),
-                    guide = "none") +
+
+install.packages("tidyverse")
+install.packages("janitor")
+install.packages("haven")
+install.packages("dplyr")
+
+library(tidyverse)
+library(janitor) 
+library(haven)
+library(dplyr)
+
+ces2020 <-
+  get_dataframe_by_name(
+    filename = "CES20_Common_OUTPUT_vv.csv",
+    dataset = "10.7910/DVN/E9N6PH",
+    server = "dataverse.harvard.edu",
+    .f = read_csv
+  ) |>
+  select(votereg, CC20_410, faminc_new, race)
+
+write_csv(ces2020, "ces2020.csv")
+
+# Summary statistics for voter registration overall
+registration_overall <- ces2020 %>% 
+  summarise(
+    Total = n(),
+    Registered_Count = sum(votereg == "1", na.rm = TRUE),
+    Not_Registered_Count = sum(votereg == "2", na.rm = TRUE),
+    Registered_Percent = (sum(votereg == "1", na.rm = TRUE) / Total) * 100
+  )
+
+print(registration_overall)
+
+# Breakdown of voter registration by race
+registration_by_race <- cleaned_data %>% 
+  group_by(race) %>% 
+  summarise(
+    Total = n(),
+    Registered_Count = sum(votereg == "active", na.rm = TRUE),
+    Registered_Percent = (sum(Registered_Count, na.rm = TRUE) / Total * 100
+  )) %>% 
+  arrange(desc(Registered_Percent))
+
+print(registration_by_gender)
+
+# Breakdown of voter registration by income
+registration_by_income <- cleaned_data %>% 
+  group_by(faminc_new) %>% 
+  summarise(
+    Total = n(),
+    Registered_Count = sum(voter_status == "active", na.rm = TRUE),
+    Registered_Percent = (sum(Registered_Count, na.rm = TRUE) / Total * 100
+  )) %>% 
+  arrange(desc(Registered_Percent))
+
+print(registration_by_education)
+```
+
+## Presidential Preferences
+The analysis of presidential preferences by race and income, as outlined in Table 2 (@tbl-presidentialdistribution), sheds light on the relationship between socio-economic factors and electoral choices in the 2020 election. Within this visualization, presidential candidates' support is categorized by family income levels and further dissected across different racial groups, employing a color-coded scheme to differentiate the candidates. Observing the distribution, it's apparent that the majority of the electorate's preferences are polarized along both racial and income lines, with distinct patterns emerging within each subgroup. It shows a significant tilt towards one candidate (Biden), over others. However, there is a varying scales of support for presidential candidates overall across income and racial lines.
+```{r}
+#| label: tbl-presidentialdistribution
+#| tbl-cap: "Distribution of Presidential Preferences by Race and Income"
+#| echo: false
+options(repos = c(CRAN = "https://cloud.r-project.org"))
+
+
+install.packages("tidyverse")
+install.packages("janitor")
+install.packages("haven")
+install.packages("dplyr")
+install.packages("ggplot2")
+
+library(tidyverse)
+library(janitor) 
+library(haven)
+library(dplyr)
+library(ggplot2)
+
+ces2020 <-
+  get_dataframe_by_name(
+    filename = "CES20_Common_OUTPUT_vv.csv",
+    dataset = "10.7910/DVN/E9N6PH",
+    server = "dataverse.harvard.edu",
+    .f = read_csv
+  ) |>
+  select(CC20_410, faminc_new, race)
+
+write_csv(ces2020, "ces2020.csv")
+
+ces2020 |>
+  ggplot(aes(x = faminc_new, fill = CC20_410)) +
+  stat_count(position = "dodge") +
+  facet_wrap(facets = vars(race)) +
   theme_minimal() +
-  facet_wrap(~species, ncol = 1) +
-  coord_flip()
+  labs(
+    x = "Highest income",
+    y = "Number of respondents",
+    fill = "Voted for"
+  ) +
+  coord_flip() +
+  scale_fill_brewer(palette = "Set1") +
+  theme(legend.position = "bottom")
+```
+
+## Voter Turnout
+The analysis of the 2020 U.S Election voter turnout, as outlined in Table 3 (@tbl-voterturnout), suggests intriguing patterns of voter turnout across various races and income levels. The bar charts, delineated by race, reveal the proportions of individuals within each income bracket who participated in the voting process. Notably, higher income levels appear to correlate with increased voter turnout across most racial groups, indicating a potential socioeconomic impact on electoral engagement. The racial facet of the data exhibits distinct turnout trends, potentially reflecting differing barriers to entry or motivational factors influencing political participation. For instance, some minority groups show a relatively consistent turnout across income levels, suggesting the possibility of a strong community-driven voter mobilization that transcends economic status. On the contrary, in other racial categories, there is a more pronounced gradient of turnout correlating with income, highlighting socioeconomic status as a potentially more significant factor in these communities' political participation. These insights can drive future studies to explore the underlying causes of such patterns and develop targeted strategies to increase voter turnout across all segments of society.
+```{r}
+#| label: tbl-voterturnout
+#| tbl-cap: "Distribution of Voter Turnout by Race and Income"
+#| echo: false
+options(repos = c(CRAN = "https://cloud.r-project.org"))
+
+
+install.packages("tidyverse")
+install.packages("janitor")
+install.packages("haven")
+install.packages("dplyr")
+install.packagess("ggplot2")
+
+library(tidyverse)
+library(janitor) 
+library(haven)
+library(dplyr)
+library(ggplot2)
+
+ces2020 <-
+  get_dataframe_by_name(
+    filename = "CES20_Common_OUTPUT_vv.csv",
+    dataset = "10.7910/DVN/E9N6PH",
+    server = "dataverse.harvard.edu",
+    .f = read_csv
+  ) |>
+  select(CC20_401, faminc_new, race)
+
+write_csv(ces2020, "ces2020.csv")
+
+ces2020 |>
+  ggplot(data, aes(x = faminc_new, y = CC20_401, group = race, color = race)) +
+  geom_jitter(width = 0.1, height = 0.1, alpha = 0.5) +
+  stat_smooth(method = "glm", method.args = list(family = "binomial"), se = FALSE) +
+  facet_wrap(~ race) +
+  theme_minimal() +
+  labs(x = "Income", y = "Biden", title = "Distribution of Voter Turnout by Race and Income") +
+  scale_color_manual(values = c("Under $30000" = "blue", "$30000 to $49999" = "red", "$50000 to $99999" = "yellow", "$100000 to $149999" = "purple", "$200000 or more" = "green"))
 ```
 
 Talk more about it.
