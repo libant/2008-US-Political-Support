@@ -370,7 +370,7 @@ race_summary <- ces2020 %>%
   mutate(Percentage = Count / sum(Count) * 100)
 
 vote_summary <- ces2020 %>%
-  group_by(vote) %>%
+  group_by(CC20_401) %>%
   summarise(Count = n()) %>%
   mutate(Percentage = Count / sum(Count) * 100)
 ```
@@ -438,15 +438,103 @@ The distributions for the model parameters provide insights into the effects of 
 
 ### Race
 
-The effect of Race on voting likelihood was positive, indicating that older individuals were more likely to vote than younger ones. The median estimate of the Race coefficient was [insert value], with a 95% credible interval of [insert range], suggesting a significant relationship between age and voting behavior.
+The effect of Race on voting likelihood was positive, indicating that older individuals were more likely to vote than younger ones. The median estimate of the Race coefficient was [insert value], with a 95% credible interval of [insert range], suggesting a significant relationship between age and voting behavior. This is further represented in Table ?
 
-(Graphically, this could be represented by a plot showing the probability of voting across different ages, highlighting the increasing trend.)
+```{r}
+#| label: tbl-bidenrace
+#| tbl-cap: "The Effect of Race on Voting for Biden"
+#| echo: false
+options(repos = c(CRAN = "https://cloud.r-project.org"))
+
+
+install.packages("tidyverse")
+install.packages("janitor")
+install.packages("haven")
+install.packages("dplyr")
+install.packagess("ggplot2")
+
+library(tidyverse)
+library(janitor) 
+library(haven)
+library(dplyr)
+library(ggplot2)
+
+ces2020 <-
+  get_dataframe_by_name(
+    filename = "CES20_Common_OUTPUT_vv.csv",
+    dataset = "10.7910/DVN/E9N6PH",
+    server = "dataverse.harvard.edu",
+    .f = read_csv
+  ) |>
+  select(CC20_401, faminc_new, race)
+
+write_csv(ces2020, "ces2020.csv")
+
+biden_vote_proportion <- ces2020 %>%
+  group_by(race) %>%
+  summarise(Proportion_for_Biden = mean(CC20_401 == 1, na.rm = TRUE)) %>%
+  ungroup()
+
+ggplot(biden_vote_proportion, aes(x = race, y = Proportion_for_Biden)) +
+  geom_col(fill = "blue") +  
+  labs(title = "Proportion of Respondents Voting for Biden by Race",
+       x = "Race",
+       y = "Proportion Voting for Biden") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
 
 ### Income
-
 Income showed a differential impact on voting likelihood, with higher levels of education associated with an increased probability of voting. The model estimates for each income level, relative to the baseline category, illustrate this pattern clearly.
 
-(A table would summarize the coefficient estimates for income levels, and a graph could show the voting probability by income level, emphasizing the gradient of increasing likelihood with higher income.)
+```{r}
+#| label: tbl-bidenincome
+#| tbl-cap: "The Effect of Income on Voting for Biden"
+#| echo: false
+options(repos = c(CRAN = "https://cloud.r-project.org"))
+
+
+install.packages("tidyverse")
+install.packages("janitor")
+install.packages("haven")
+install.packages("dplyr")
+install.packagess("ggplot2")
+
+library(tidyverse)
+library(janitor) 
+library(haven)
+library(dplyr)
+library(ggplot2)
+
+ces2020 <-
+  get_dataframe_by_name(
+    filename = "CES20_Common_OUTPUT_vv.csv",
+    dataset = "10.7910/DVN/E9N6PH",
+    server = "dataverse.harvard.edu",
+    .f = read_csv
+  ) |>
+  select(CC20_401, faminc_new, race)
+
+write_csv(ces2020, "ces2020.csv")
+
+income_levels <- data.frame(income = seq(min(ces2020$faminc_new, 
+                                             na.rm = TRUE), 
+                                        max(ces2020$faminc_new, 
+                                            na.rm = TRUE), 
+                                        length.out = 100))
+# Predict probabilities
+income_levels$prob_vote_biden <- predict(model, newdata = income_levels, 
+                                         type = "response")
+
+# Plot the probabilities
+ggplot(income_levels, aes(x = faminc_new, y = prob_vote_biden)) +
+  geom_line(color = "blue") +
+  geom_ribbon(aes(ymin = 0, ymax = prob_vote_biden), fill = "blue", alpha = 0.2) +
+  labs(title = "Predicted Probability of Voting for Biden by Income Level",
+       x = "Income Level",
+       y = "Probability of Voting for Biden") +
+  theme_minimal()
+```
 
 ## Examination of Results
 
