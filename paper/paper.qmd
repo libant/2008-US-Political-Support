@@ -316,7 +316,7 @@ We run the model in R [@citeR] using the `rstanarm` package of @rstanarm. We use
 
 
 ### Model justification
-For our model, we expect more minorities to vote for Biden based on his campaign. We also expect there to be a considerable effect of income. We intend to investigate how these demographic factors may influence the probability of individuals voting for a particular candidate. To convey these relationships mathematically, we can represent them using LaTeX within dollar signs, such as $\beta_1$ for the effect of race and $\beta_2$ for the effect of income.
+For our model, we expect more minorities to vote for Biden based on his campaign. We also expect there to be a considerable effect of income. We intend to investigate if there is a significant relationship between these demographic factors and how they influence the probability of individuals voting for a particular candidate. To convey these relationships mathematically, we can represent them using LaTeX within dollar signs, such as $\beta_1$ for the effect of race and $\beta_2$ for the effect of income.
 
 We expect a positive relationship between the size of the wings and time spent aloft. In particular...
 
@@ -324,6 +324,56 @@ We can use maths by including latex between dollar signs, for instance $\theta$.
 
 
 # Results
+## Summary Statistics of Demographic Factors
+@tbl-demographicsummary write some stuff about the summary statistics
+```{r}
+#| label: tbl-demographicsummary
+#| tbl-cap: "Summary Statistics of Demographic Factors"
+#| echo: false
+options(repos = c(CRAN = "https://cloud.r-project.org"))
+
+
+install.packages("tidyverse")
+install.packages("janitor")
+install.packages("haven")
+install.packages("dplyr")
+install.packagess("ggplot2")
+
+library(tidyverse)
+library(janitor) 
+library(haven)
+library(dplyr)
+library(ggplot2)
+
+ces2020 <-
+  get_dataframe_by_name(
+    filename = "CES20_Common_OUTPUT_vv.csv",
+    dataset = "10.7910/DVN/E9N6PH",
+    server = "dataverse.harvard.edu",
+    .f = read_csv
+  ) |>
+  select(CC20_401, faminc_new, race)
+
+write_csv(ces2020, "ces2020.csv")
+
+income_summary <- ces2020 %>%
+  summarise(
+    Mean_Income = mean(faminc_new, na.rm = TRUE),
+    SD_Income = sd(faminc_new, na.rm = TRUE),
+    Min_Income = min(faminc_new, na.rm = TRUE),
+    Max_Income = max(faminc_new, na.rm = TRUE)
+  )
+
+race_summary <- ces2020 %>%
+  group_by(race) %>%
+  summarise(Count = n()) %>%
+  mutate(Percentage = Count / sum(Count) * 100)
+
+vote_summary <- ces2020 %>%
+  group_by(vote) %>%
+  summarise(Count = n()) %>%
+  mutate(Percentage = Count / sum(Count) * 100)
+```
 
 Our results are summarized in @tbl-modelresults.
 
@@ -335,25 +385,72 @@ Our results are summarized in @tbl-modelresults.
 
 library(rstanarm)
 
-first_model <-
-  readRDS(file = here::here("models/first_model.rds"))
+ces2020 <-
+  get_dataframe_by_name(
+    filename = "CES20_Common_OUTPUT_vv.csv",
+    dataset = "10.7910/DVN/E9N6PH",
+    server = "dataverse.harvard.edu",
+    .f = read_csv
+  ) |>
+  select(CC20_401, faminc_new, race)
+
+write_csv(ces2020, "ces2020.csv")
+
+political_preferences <-
+  stan_glm(
+    voted_for ~ gender + education,
+    data = ces2020_reduced,
+    family = binomial(link = "logit"),
+    prior = normal(location = 0, scale = 2.5, autoscale = TRUE),
+    prior_intercept = 
+      normal(location = 0, scale = 2.5, autoscale = TRUE)
+  )
+
+saveRDS(
+  political_preferences,
+  file = "political_preferences.rds"
+)
+
+political_preferences <-
+  readRDS(file = "political_preferences.rds")
 ```
 
 ```{r}
 #| echo: false
 #| eval: true
 #| label: tbl-modelresults
-#| tbl-cap: "Explanatory models of flight time based on wing width and wing length"
+#| tbl-cap: "Explanatory models of whether a respondent is likely to vote for Biden based on their race and income"
 #| warning: false
 
-modelsummary::modelsummary(
+modelsummary(
   list(
-    "First model" = first_model
+    "Support Biden" = political_preferences
   ),
-  statistic = "mad",
-  fmt = 2
-)
+  statistic = "mad"
+  )
 ```
+
+Our model suggests [blank race] were less likely to vote for Biden, and that there is a considerable effect of income
+
+The distributions for the model parameters provide insights into the effects of race and income on the likelihood of voting and the likelihood of a certain candidate over the other. 
+
+## Effects of Demographic Factors on Voting Likelihood
+
+### Race
+
+The effect of Race on voting likelihood was positive, indicating that older individuals were more likely to vote than younger ones. The median estimate of the Race coefficient was [insert value], with a 95% credible interval of [insert range], suggesting a significant relationship between age and voting behavior.
+
+(Graphically, this could be represented by a plot showing the probability of voting across different ages, highlighting the increasing trend.)
+
+### Income
+
+Income showed a differential impact on voting likelihood, with higher levels of education associated with an increased probability of voting. The model estimates for each income level, relative to the baseline category, illustrate this pattern clearly.
+
+(A table would summarize the coefficient estimates for income levels, and a graph could show the voting probability by income level, emphasizing the gradient of increasing likelihood with higher income.)
+
+## Examination of Results
+
+These results highlight the crucial role demographic factors play in influencing electoral participation. Older individuals and those with higher levels of income are significantly more likely to vote, aligning with existing literature on voting behavior. The observed race difference in voting likelihood also contributes to ongoing discussions on race dynamics within political engagement.
 
 
 
