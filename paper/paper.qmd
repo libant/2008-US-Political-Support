@@ -398,8 +398,8 @@ write_csv(ces2020, "ces2020.csv")
 
 political_preferences <-
   stan_glm(
-    voted_for ~ gender + education,
-    data = ces2020_reduced,
+    CC20_401 ~ race + faminc_new,
+    data = ces2020,
     family = binomial(link = "logit"),
     prior = normal(location = 0, scale = 2.5, autoscale = TRUE),
     prior_intercept = 
@@ -541,21 +541,40 @@ ggplot(income_levels, aes(x = faminc_new, y = prob_vote_biden)) +
 These results highlight the crucial role demographic factors play in influencing electoral participation. Older individuals and those with higher levels of income are significantly more likely to vote, aligning with existing literature on voting behavior. The observed race difference in voting likelihood also contributes to ongoing discussions on race dynamics within political engagement.
 
 
-
-
 # Discussion
 
-## First discussion point {#sec-first-point}
+## Effect of Race and Income on Voting {#sec-first-point}
+This model reveals the nuanced impact of race and family income on voting behavior. For instance, the analysis might show significant differences in voting patterns across racial groups, with certain races more likely to support the candidate represented by CC20_401. Additionally, family income could have a positive or negative association with the likelihood of voting for this candidate, potentially reflecting the economic priorities or perceptions of the candidate's policies among different income brackets.
+
+The insights derived from this model are vital for several reasons. For one, they highlight how demographic factors like race and income influence political preferences, underscoring the importance of inclusive policy-making that addresses the needs of diverse population segments. They also can inform political campaigns about which demographics are more likely to support their candidate, allowing for more targeted outreach and engagement strategies. Moreover, they contribute to the broader understanding of social and economic determinants of political behavior, offering a lens through which to view the intersections of race, income, and political alignment.
+
+A study that aligns with these findings is Laurison's (2021) Voting Intersections: Race, Class, and Participation in Presidential Elections in the United States 2008–2016". This research examines the role of socioeconomic factors in shaping electoral outcomes over several election cycles, providing evidence that both race and income significantly influence voter preferences and turnout. Specifically, they find that income strongly predicts White voting. However, the class gap in voting is not statistically significant among Black voters. In contrast to common characterizations of Black people as politically disengaged, lower income Black citizens are more likely to vote than their White counterparts. The findings corroborate the importance of considering these variables in political science research and suggest that understanding the complex interplay between socioeconomic status and political behavior is crucial for comprehending the dynamics of electoral politics.
 
 If my paper were 10 pages, then should be be at least 2.5 pages. The discussion is a chance to show off what you know and what you learnt from all this. 
 
-## Second discussion point
+## Cultural Differences {#sec-second-point}
+The model highlights cultural differences in value systems across racial and income groups, influencing political alignment. For instance, certain races might place a higher emphasis on community support and social welfare programs, leading to a preference for candidates who prioritize these issues. Cultural differences in voting behavior might also reflect historical contexts and socioeconomic conditions unique to each racial or income group. These contexts can shape perceptions of political institutions and candidates, influencing electoral decisions. 
 
-## Third discussion point
+The importance of these findings are that understanding cultural differences in voting behavior is crucial for political campaigns aiming to engage with a diverse electorate effectively. Tailoring messages that resonate with the unique values and concerns of different cultural groups can enhance voter outreach and participation. Additionally, insights into the cultural underpinnings of voting preferences can inform policy development, ensuring that it addresses the needs and expectations of culturally diverse constituencies.
 
-## Weaknesses and next steps
+An important study in this context is Rhodes (2017), "Is America More Divided by Race or Class? Race, Income, and Attitudes among Whites, African Americans, and Latinos". Their findings suggest that race and class intersect in different ways for different groups in society. Increasing income erodes differences in attitudes between Latinos and whites, but has no effect on the large gap in attitudes between African Americans and whites. Interpolating these insights with the context of our model's outcomes, we gain a nuanced understanding of the interplay between culture, race, income, and voting behavior, emphasizing the critical role of cultural diversity in shaping political processes.
 
-Weaknesses and next steps should also be included.
+## Demographic Variable Effects {#sec-third-point}
+We found that potentially due to varying policy priorities, historical voting trends, or the influence of race-specific issues,vVoter demographics can reveal how different racial groups may have distinct voting patterns. Analysis might show that income levels correlate with particular political preferences, where higher income brackets could favor policies or candidates that support their economic interests, while lower income brackets may support candidates advocating for social welfare programs.
+
+The importance of these insights are allowing political campaigns to tailor their messaging and policy proposals to better meet the needs and preferences of different demographic groups as you further understand voter demographics.
+Additionally, insights into the demographic breakdown of voter preferences can inform policymakers and political leaders, helping them to develop more inclusive and representative policies. By recognizing and addressing the diverse needs of the electorate, political actors can enhance engagement and participation across all segments of society, strengthening democratic processes.
+
+A study that contextualizes the importance of demographic analysis in understanding electoral behavior is Arceneaux (2005), titled "Do Campaigns Help Voters Learn? A Cross-National Analysis". This paper further supports the hypothesis that campaigns ‘enlighten’ voters as the election draws near. Moreover, the article shows that some voters learn more from campaigns than others. Campaign effects are more pronounced among individuals with low political sophistication and those living in party list systems. Implications for future research are explored, suggesting a ripe research agenda using under-tapped cross-national data. By leveraging such demographic insights, stakeholders in the political process can better understand and respond to the needs of an increasingly diverse electorate, fostering a more dynamic and responsive political landscape.
+
+## Limitations and Future Steps
+One potential weakness of the CES2020 dataset is the representativeness of the dataset. While CES aims to capture a broad cross-section of the American electorate, challenges remain in fully representing underrepresented minorities, individuals without internet access, and those less inclined to participate in surveys, potentially skewing the dataset's reflection of the national population. Additionally, the accuracy of responses may be affected by measurement errors, including the framing of questions and social desirability bias, where respondents may provide answers they perceive as more socially acceptable rather than their true beliefs.
+
+The cross-sectional design of CES 2020 limits the ability to track changes in political attitudes and behaviors over time, making it difficult to analyze trends or predict future shifts in the political landscape. Missing data, a common issue in large datasets, presents another challenge, potentially leading to biased outcomes if not adequately addressed.
+
+Looking forward, enhancing the representativeness of the CES by exploring more diverse sampling strategies and addressing the challenges of capturing hard-to-reach populations could improve the dataset's comprehensiveness. Incorporating longitudinal elements or linking CES data with longitudinal studies could provide richer insights into how voter behaviors evolve, offering a dynamic view of political trends. Delving deeper into underexplored themes, such as the influence of local issues, misinformation, or detailed policy preferences, could unearth new understandings of voter motivations and behaviors.
+
+Employing mixed methods, such as integrating qualitative data through interviews or focus groups, could complement the quantitative CES data, providing a more nuanced picture of the electorate. Advanced statistical techniques to better handle missing data can enhance the robustness of analyses, and exploring the reasons behind non-response may offer additional insights. Lastly, linking CES data with other datasets, like economic indicators or social media trends, could enrich analyses and offer a more holistic view of the factors shaping American politics. Addressing these potential weaknesses and pursuing these future steps could significantly augment the value of the CES dataset for political scientists and policymakers alike, contributing to a deeper and more nuanced understanding of the American electoral landscape.
 
 \newpage
 
