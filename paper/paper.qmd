@@ -574,31 +574,3 @@ Employing mixed methods, such as integrating qualitative data through interviews
 
 # References
 
-
-
-
-# Model
-To investigate the factors influencing voting behavior within the Cooperative Election Study (CES) 2020 dataset, we employed a logistic regression model, leveraging the "rstanarm" package for its Bayesian inference capabilities. This choice allows for a more nuanced interpretation of results, incorporating prior beliefs and providing probabilistic estimates of the parameters. Secondly, this model aims to unpack the impact of demographic variables such as race and income on the probability of an individual casting a vote, framed within a binary outcome (voted vs. did not vote). The overarching goal of the modeling strategy is to distill the complex interplay of these demographic variables, helping our understanding of voting behaviors.
-
-## Model set-up
-
-Define $y_i$ as the political preference of the respondent and equal to 1 if Biden and 0 if Trump. Then $\mbox{race}_i$ is the race of the respondent and $\mbox{income}_i$ is the income of the respondent.  
-
-\[
-\begin{aligned}
-y_i|\pi_i & \sim \text{Bern}(\pi_i) \\
-\text{logit}(\pi_i) & = \beta_0 + \beta_1 \times \text{race}_i + \beta_2 \times \text{income}_i \\
-\beta_0 & \sim \text{Normal}(0, 2.5) \\
-\beta_1 & \sim \text{Normal}(0, 2.5) \\
-\beta_2 & \sim \text{Normal}(0, 2.5)
-\end{aligned}
-\]
-
-We run the model in R [@citeR] using the `rstanarm` package of @rstanarm. We use the default priors from `rstanarm`.
-
-
-### Model justification
-For the model, we expect more minorities to vote for Biden based on his campaign. We also expect there to be a considerable effect of income. We intend to investigate if there is a significant relationship between these demographic factors and how they influence the probability of individuals voting for a particular candidate. To convey these relationships mathematically, we can represent them using LaTeX within dollar signs, such as $\beta_1$ for the effect of race and $\beta_2$ for the effect of income.
-
-
-
