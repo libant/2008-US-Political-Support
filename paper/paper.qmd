@@ -29,7 +29,7 @@ This study aims to fill a critical gap in the existing literature on political s
 
 The findings reveal significant correlations between these characteristics (income and race) and political support, highlighting the complexity of political engagement in the United States. These results not only highlight the importance of demographic factors in predicting political preferences but also illustrate the varied nature of political support across different segments of the American population, offering new insights into the priorities and concerns that drive political behavior in the United States. 
 
-The paper begins with an overview of the CES 2020 dataset and the methods employed in the data analysis, followed by a presentation of results and key findings. I conclude the paper with a discussion that contextualizes the results within the broader literature on political support in the United States. The analysis was conducted using the statistical programming language R [@citeR], utilizing packages such as tidyverse [@citetidyverse], dplyr [@citedplyr], ggplot2 [@citeggplot2], dataverse [@citedataverse], janitor [@citejanitor], rstanarm [@rstanarm], modelsummary [@modelsummary], broom.mixed [@broommixed] and additional papers such as Arceneaux's "Do Campaigns Help Voters Learn? A Cross-National Analysis" [@Arceneaux2005DoCH], Laurison's "Voting Intersections: Race, Class, and Participation in Presidential Elections in the United States 2008–2016" [@Laurison2021VotingIR], and Rhodes's "Is America More Divided by Race or Class? Race, Income, and Attitudes among Whites, African Americans, and Latinos"[@Rhodes2017IsAM].
+The paper begins with an overview of the CES 2020 dataset and the methods employed in the data analysis, followed by a presentation of results and key findings. I conclude the paper with a discussion that contextualizes the results within the broader literature on political support in the United States. The analysis was conducted using the statistical programming language R [@citeR], utilizing packages such as tidyverse [@citetidyverse], dplyr [@citedplyr], ggplot2 [@citeggplot2], dataverse [@citedataverse], janitor [@citejanitor], rstanarm [@rstanarm], modelsummary [@modelsummary], broom.mixed [@broommixed], knitr [@knitr] and additional papers such as Arceneaux's "Do Campaigns Help Voters Learn? A Cross-National Analysis" [@Arceneaux2005DoCH], Laurison's "Voting Intersections: Race, Class, and Participation in Presidential Elections in the United States 2008–2016" [@Laurison2021VotingIR], and Rhodes's "Is America More Divided by Race or Class? Race, Income, and Attitudes among Whites, African Americans, and Latinos"[@Rhodes2017IsAM].
 
 # Data {#sec-data}
 
@@ -114,17 +114,22 @@ As outlined in Table 1 (@tbl-registrationsummary), there is a notable level of e
 #| label: tbl-registrationsummary
 #| tbl-cap: "Summary Statistics of Registered Voters"
 #| echo: false
+#| warning: false
+#| message: false
+#| include: false
 options(repos = c(CRAN = "https://cloud.r-project.org"))
 
 install.packages("tidyverse")
 install.packages("janitor")
 install.packages("dataverse")
 install.packages("dplyr")
+install.packages("knitr")
 
 library(tidyverse)
 library(janitor) 
 library(dataverse)
 library(dplyr)
+library(knitr)
 
 ces2020 <-
   get_dataframe_by_name(
@@ -146,8 +151,6 @@ registration_overall <- ces2020 %>%
     Registered_Percent = (sum(votereg == "1", na.rm = TRUE) / Total) * 100
   )
 
-print(registration_overall)
-
 # Breakdown of voter registration by race
 registration_by_race <- ces2020 %>% 
   group_by(race) %>% 
@@ -157,8 +160,6 @@ registration_by_race <- ces2020 %>%
     Registered_Percent = (sum(Registered_Count, na.rm = TRUE) / Total * 100
   )) %>% 
   arrange(desc(Registered_Percent))
-
-print(registration_by_race)
 
 # Breakdown of voter registration by income
 registration_by_income <- ces2020 %>% 
@@ -170,7 +171,9 @@ registration_by_income <- ces2020 %>%
   )) %>% 
   arrange(desc(Registered_Percent))
 
-print(registration_by_income)
+kable(registration_overall, caption = "Summary Statistics of Registered Voters Overall")
+kable(registration_by_race, caption = "Voter Registration by Race")
+kable(registration_by_income, caption = "Voter Registration by Income")
 ```
 
 ## Presidential Preferences
@@ -179,45 +182,47 @@ The analysis of presidential preferences by race and income, as outlined in Tabl
 #| label: tbl-presidentialdistribution
 #| tbl-cap: "Distribution of Presidential Preferences by Race and Income"
 #| echo: false
-options(repos = c(CRAN = "https://cloud.r-project.org"))
+#| warning: false
+#| message: false
+#| include: false
+#options(repos = c(CRAN = "https://cloud.r-project.org"))
 
 
-install.packages("tidyverse")
-install.packages("janitor")
-install.packages("dataverse")
-install.packages("dplyr")
-install.packages("ggplot2")
+#install.packages("tidyverse")
+#install.packages("janitor")
+#install.packages("dataverse")
+#install.packages("dplyr")
+#install.packages("ggplot2")
 
-library(tidyverse)
-library(janitor) 
-library(dataverse)
-library(dplyr)
-library(ggplot2)
+#library(tidyverse)
+#library(janitor) 
+#library(dataverse)
+#library(dplyr)
+#library(ggplot2)
 
-ces2020 <-
-  get_dataframe_by_name(
-    filename = "CES20_Common_OUTPUT_vv.csv",
-    dataset = "10.7910/DVN/E9N6PH",
-    server = "dataverse.harvard.edu",
-    .f = read_csv
-  ) |>
-  select(CC20_410, faminc_new, race)
+#ces2020 <-
+#  get_dataframe_by_name(
+#    filename = "CES20_Common_OUTPUT_vv.csv",
+#    dataset = "10.7910/DVN/E9N6PH",
+#    server = "dataverse.harvard.edu",
+#    .f = read_csv
+#  ) |>
+#  select(CC20_410, faminc_new, race)
 
-write_csv(ces2020, "ces2020.csv")
+#write_csv(ces2020, "ces2020.csv")
 
-ces2020 |>
-  ggplot(aes(x = faminc_new, fill = CC20_410)) +
-  stat_count(position = "dodge") +
-  facet_wrap(facets = vars(race)) +
-  theme_minimal() +
-  labs(
-    x = "Highest income",
-    y = "Number of respondents",
-    fill = "Voted for"
-  ) +
-  coord_flip() +
-  scale_fill_brewer(palette = "Set1") +
-  theme(legend.position = "bottom")
+#ces2020 <- read_csv("ces2020.csv") %>%
+#  mutate(CC20_410 = as.factor(CC20_410),  # Ensure this is treated as categorical
+#         race = as.factor(race))          # Ensure race is also treated as categorical
+
+#ggplot(data = ces2020, aes(x = faminc_new, fill = CC20_410)) +
+#  geom_bar(position = "dodge", stat = "count") +  # Using geom_bar with stat="count" for clarity
+#  facet_wrap(~ race) +
+#  theme_minimal() +
+#  labs(x = "Highest income", y = "Number of respondents", fill = "Voted for") +
+#  coord_flip() +
+#  scale_fill_brewer(palette = "Set1") +
+#  theme(legend.position = "bottom")
 ```
 
 ## Voter Turnout
@@ -226,87 +231,63 @@ The analysis of the 2020 U.S Election voter turnout, as outlined in Table 3 (@tb
 #| label: tbl-voterturnout
 #| tbl-cap: "Distribution of Voter Turnout by Race and Income"
 #| echo: false
-options(repos = c(CRAN = "https://cloud.r-project.org"))
+#| warning: false
+#| message: false
+#| include: false
+#options(repos = c(CRAN = "https://cloud.r-project.org"))
 
-install.packages("tidyverse")
-install.packages("janitor")
-install.packages("dataverse")
-install.packages("dplyr")
-install.packages("ggplot2")
+#install.packages("tidyverse")
+#install.packages("janitor")
+#install.packages("dataverse")
+#install.packages("dplyr")
+#install.packages("ggplot2")
 
-library(tidyverse)
-library(janitor) 
-library(dataverse)
-library(dplyr)
-library(ggplot2)
+#library(tidyverse)
+#library(janitor) 
+#library(dataverse)
+#library(dplyr)
+#library(ggplot2)
 
-ces2020 <-
-  get_dataframe_by_name(
-    filename = "CES20_Common_OUTPUT_vv.csv",
-    dataset = "10.7910/DVN/E9N6PH",
-    server = "dataverse.harvard.edu",
-    .f = read_csv
-  ) |>
-  select(CC20_401, faminc_new, race)
+#ces2020 <-
+#  get_dataframe_by_name(
+#    filename = "CES20_Common_OUTPUT_vv.csv",
+#    dataset = "10.7910/DVN/E9N6PH",
+#    server = "dataverse.harvard.edu",
+#    .f = read_csv
+#  ) |>
+#  select(CC20_401, faminc_new, race)
 
-write_csv(ces2020, "ces2020.csv")
+#write_csv(ces2020, "ces2020.csv")
 
-ces2020 <- read_csv("ces2020.csv")
-ces2020 <- ces2020 %>%
-  mutate(race = as.factor(race))
+#ces2020 <- read_csv("ces2020.csv")
+#ces2020 <- ces2020 %>%
+#  mutate(faminc_new = as.numeric(faminc_new),
+#         CC20_401 = as.factor(CC20_401)) %>%  
+#  filter(is.finite(faminc_new), !is.na(CC20_401)) %>% 
+#  mutate(race = as.factor(race)) 
 
-ggplot(data = ces2020, aes(x = faminc_new, y = CC20_401, color = race)) +
-  geom_jitter(width = 0.1, height = 0.1, alpha = 0.5) +
-  stat_smooth(method = "glm", method.args = list(family = "binomial"), se = FALSE, aes(group = race)) +
-  facet_wrap(~ race) +
-  theme_minimal() +
-  labs(x = "Income", y = "Biden", title = "Distribution of Voter Turnout by Race and Income") +
-  scale_color_manual(values = c("White" = "blue", "Black" = "red", "Hispanic" = "yellow", "Asian" = "purple", "Other" = "green"))
+
+#color_values <- c("White" = "blue", "Black" = "red", "Hispanic" = "yellow", "Asian" = "purple", "Other" = "green")
+
+#ggplot(data = ces2020, aes(x = faminc_new, y = as.numeric(CC20_401) - 1, color = race)) +
+#  geom_jitter(width = 0.1, height = 0.1, alpha = 0.5) +
+#  stat_smooth(method = "glm", method.args = list(family = "binomial"), se = FALSE, aes(group = race)) +
+#  facet_wrap(~ race) +
+#  theme_minimal() +
+#  labs(x = "Income", y = "Support for Biden (Probability)", title = "Distribution of Voter Turnout by Race and Income") +
+#  scale_color_manual(values = color_values)
 ```
-
-Talk more about it.
-
-And also planes (@fig-planes). (You can change the height and width, but don't worry about doing that until you have finished every other aspect of the paper - Quarto will try to make it look nice and the defaults usually work well once you have enough text.)
-
-Talk way more about it. 
-
-# Model
-To investigate the factors influencing voting behavior within the Cooperative Election Study (CES) 2020 dataset, we employed a logistic regression model, leveraging the `rstanarm` package of @rstanarm for its Bayesian inference capabilities. This choice allows for a more nuanced interpretation of results, incorporating prior beliefs and providing probabilistic estimates of the parameters. Secondly, this model aims to unpack the impact of demographic variables such as race and income on the probability of an individual casting a vote, framed within a binary outcome (voted vs. did not vote). The overarching goal of the modeling strategy is to distill the complex interplay of these demographic variables, helping our understanding of voting behaviors.
-
-The goal of our modelling strategy is twofold. Firstly,...
-
-Here we briefly describe the Bayesian analysis model used to investigate... Background details and diagnostics are included in [Appendix -@sec-model-details].
-
-## Model set-up
-
-Define $y_i$ as the political preference of the respondent and equal to 1 if Biden and 0 if Trump. Then $\mbox{race}_i$ is the race of the respondent and $\mbox{income}_i$ is the income of the respondent.  
-
-\begin{aligned}
-y_i|\pi_i & \sim \mbox{Bern}(\pi_i) \\
-\mbox{logit}(\pi_i) & = \beta_0+\beta_1 \times \mbox{race}_i + \beta_2 \times \mbox{income}_i \\
-\beta_0 & \sim \mbox{Normal}(0, 2.5)\\
-\beta_1 & \sim \mbox{Normal}(0, 2.5)\\
-\beta_2 & \sim \mbox{Normal}(0, 2.5)
-\end{aligned}
-
-We run the model in R [@citeR] using the `rstanarm` package of @rstanarm. We use the default priors from `rstanarm`.
-
-
-### Model justification
-For the model, we expect more minorities to vote for Biden based on his campaign. We also expect there to be a considerable effect of income. We intend to investigate if there is a significant relationship between these demographic factors and how they influence the probability of individuals voting for a particular candidate. To convey these relationships mathematically, we can represent them using LaTeX within dollar signs, such as $\beta_1$ for the effect of race and $\beta_2$ for the effect of income.
-
-We expect a positive relationship between the size of the wings and time spent aloft. In particular...
-
-We can use maths by including latex between dollar signs, for instance $\theta$.
-
 
 # Results
 ## Summary Statistics of Demographic Factors
-@tbl-demographicsummary write some stuff about the summary statistics
+As outlined in Table 4 (@tbl-demographicsummary), the largest race represented in the voters was white and the largest group of income was between $50,000 and $99,999. The variations in registration rates in regards to race and income may reveal discrepancies in registration practices and levels of electoral engagement among diverse segments of the population. This detailed breakdown by key demographics highlights the disparities and patterns of voter registration, offering insights into the dynamics of electoral participation across different states and demographic cohorts. 
 ```{r}
 #| label: tbl-demographicsummary
 #| tbl-cap: "Summary Statistics of Demographic Factors"
 #| echo: false
+#| warning: false
+#| message: false
+#| include: false
 options(repos = c(CRAN = "https://cloud.r-project.org"))
 
 
@@ -359,6 +340,7 @@ Our results are summarized in @tbl-modelresults.
 #| eval: true
 #| warning: false
 #| message: false
+#| include: false
 
 library(rstanarm)
 library(dplyr)
@@ -406,6 +388,7 @@ political_preferences <-
 ```{r}
 #| echo: false
 #| eval: true
+#| include: false
 #| label: tbl-modelresults
 #| tbl-cap: "Explanatory models of whether a respondent is likely to vote for Biden based on their race and income"
 #| warning: false
@@ -425,7 +408,7 @@ if ("stan_glm" %in% class(political_preferences)) {
 }
 ```
 
-Our model suggests [blank race] were less likely to vote for Biden, and that there is a considerable effect of income
+Our model suggests white people were less likely to vote for Biden, and that there is a considerable effect of income on this.
 
 The distributions for the model parameters provide insights into the effects of race and income on the likelihood of voting and the likelihood of a certain candidate over the other. 
 
@@ -433,12 +416,13 @@ The distributions for the model parameters provide insights into the effects of 
 
 ### Race
 
-The effect of Race on voting likelihood was positive, indicating that older individuals were more likely to vote than younger ones. The median estimate of the Race coefficient was [insert value], with a 95% credible interval of [insert range], suggesting a significant relationship between age and voting behavior. This is further represented in Table ?
+The effect of Race on voting likelihood was positive. Specifically, it was indicated that white individuals were more likely to vote than other individuals. 
 
 ```{r}
 #| label: tbl-bidenrace
 #| tbl-cap: "The Effect of Race on Voting for Biden"
 #| echo: false
+#| include: false
 options(repos = c(CRAN = "https://cloud.r-project.org"))
 
 
@@ -480,12 +464,13 @@ ggplot(biden_vote_proportion, aes(x = race, y = Proportion_for_Biden)) +
 ```
 
 ### Income
-Income showed a differential impact on voting likelihood, with higher levels of education associated with an increased probability of voting. The model estimates for each income level, relative to the baseline category, illustrate this pattern clearly.
+Income showed a differential impact on voting likelihood, with median and low levels of income being associated with an increased probability of voting. The model estimates this for each income level, relative to the baseline category.
 
 ```{r}
 #| label: tbl-bidenincome
 #| tbl-cap: "The Effect of Income on Voting for Biden"
 #| echo: false
+#| include: false
 options(repos = c(CRAN = "https://cloud.r-project.org"))
 
 
@@ -549,19 +534,16 @@ ggplot(biden_vote_proportion, aes(x = faminc_new, y = Proportion_for_Biden)) +
 
 ## Examination of Results
 
-These results highlight the crucial role demographic factors play in influencing electoral participation. Older individuals and those with higher levels of income are significantly more likely to vote, aligning with existing literature on voting behavior. The observed race difference in voting likelihood also contributes to ongoing discussions on race dynamics within political engagement.
-
+These results highlight the crucial role demographic factors play in influencing electoral participation. White individuals and those with average levels of income are significantly more likely to vote, aligning with existing literature on voting behavior. The observed race difference in voting likelihood also contributes to ongoing discussions on race dynamics within political engagement.
 
 # Discussion
 
 ## Effect of Race and Income on Voting {#sec-first-point}
-This model reveals the nuanced impact of race and family income on voting behavior. For instance, the analysis might show significant differences in voting patterns across racial groups, with certain races more likely to support the candidate represented by CC20_401. Additionally, family income could have a positive or negative association with the likelihood of voting for this candidate, potentially reflecting the economic priorities or perceptions of the candidate's policies among different income brackets.
+This model reveals the nuanced impact of race and family income on voting behavior. For instance, the analysis shows significant differences in voting patterns across racial groups, with non-white individuals being more likely to support Biden. Additionally, family income has a positive association with the likelihood of voting for Biden, potentially reflecting the economic priorities or perceptions of the candidate's policies among different income brackets.
 
 The insights derived from this model are vital for several reasons. For one, they highlight how demographic factors like race and income influence political preferences, underscoring the importance of inclusive policy-making that addresses the needs of diverse population segments. They also can inform political campaigns about which demographics are more likely to support their candidate, allowing for more targeted outreach and engagement strategies. Moreover, they contribute to the broader understanding of social and economic determinants of political behavior, offering a lens through which to view the intersections of race, income, and political alignment.
 
 A study that aligns with these findings is Laurison's (2021) Voting Intersections: Race, Class, and Participation in Presidential Elections in the United States 2008–2016". This research examines the role of socioeconomic factors in shaping electoral outcomes over several election cycles, providing evidence that both race and income significantly influence voter preferences and turnout. Specifically, they find that income strongly predicts White voting. However, the class gap in voting is not statistically significant among Black voters. In contrast to common characterizations of Black people as politically disengaged, lower income Black citizens are more likely to vote than their White counterparts. The findings corroborate the importance of considering these variables in political science research and suggest that understanding the complex interplay between socioeconomic status and political behavior is crucial for comprehending the dynamics of electoral politics.
-
-If my paper were 10 pages, then should be be at least 2.5 pages. The discussion is a chance to show off what you know and what you learnt from all this. 
 
 ## Cultural Differences {#sec-second-point}
 The model highlights cultural differences in value systems across racial and income groups, influencing political alignment. For instance, certain races might place a higher emphasis on community support and social welfare programs, leading to a preference for candidates who prioritize these issues. Cultural differences in voting behavior might also reflect historical contexts and socioeconomic conditions unique to each racial or income group. These contexts can shape perceptions of political institutions and candidates, influencing electoral decisions. 
@@ -571,7 +553,7 @@ The importance of these findings are that understanding cultural differences in 
 An important study in this context is Rhodes (2017), "Is America More Divided by Race or Class? Race, Income, and Attitudes among Whites, African Americans, and Latinos". Their findings suggest that race and class intersect in different ways for different groups in society. Increasing income erodes differences in attitudes between Latinos and whites, but has no effect on the large gap in attitudes between African Americans and whites. Interpolating these insights with the context of the model's outcomes, we gain a nuanced understanding of the interplay between culture, race, income, and voting behavior, emphasizing the critical role of cultural diversity in shaping political processes.
 
 ## Demographic Variable Effects {#sec-third-point}
-I found that potentially due to varying policy priorities, historical voting trends, or the influence of race-specific issues,vVoter demographics can reveal how different racial groups may have distinct voting patterns. Analysis might show that income levels correlate with particular political preferences, where higher income brackets could favor policies or candidates that support their economic interests, while lower income brackets may support candidates advocating for social welfare programs.
+I found that potentially due to varying policy priorities, historical voting trends, or the influence of race-specific issues, voter demographics can reveal how different racial groups may have distinct voting patterns. Analysis shows that higher income levels correlate with a preference for Biden as president, while lower income brackets also supports Biden.
 
 The importance of these insights are allowing political campaigns to tailor their messaging and policy proposals to better meet the needs and preferences of different demographic groups as you further understand voter demographics.
 Additionally, insights into the demographic breakdown of voter preferences can inform policymakers and political leaders, helping them to develop more inclusive and representative policies. By recognizing and addressing the diverse needs of the electorate, political actors can enhance engagement and participation across all segments of society, strengthening democratic processes.
@@ -589,68 +571,34 @@ Employing mixed methods, such as integrating qualitative data through interviews
 
 \newpage
 
-\appendix
-
-# Appendix {-}
-
-
-# Additional data details
-
-# Model details {#sec-model-details}
-
-## Posterior predictive check
-
-In @fig-ppcheckandposteriorvsprior-1 we implement a posterior predictive check. This shows...
-
-In @fig-ppcheckandposteriorvsprior-2 we compare the posterior with the prior. This shows... 
-
-```{r}
-#| eval: true
-#| echo: false
-#| message: false
-#| warning: false
-#| label: fig-ppcheckandposteriorvsprior
-#| layout-ncol: 2
-#| fig-cap: "Examining how the model fits, and is affected by, the data"
-#| fig-subcap: ["Posterior prediction check", "Comparing the posterior with the prior"]
-
-#pp_check(first_model) +
-#  theme_classic() +
-#  theme(legend.position = "bottom")
-
-#posterior_vs_prior(first_model) +
-#  theme_minimal() +
-#  scale_color_brewer(palette = "Set1") +
-#  theme(legend.position = "bottom") +
-# coord_flip()
-```
-
-## Diagnostics
-
-@fig-stanareyouokay-1 is a trace plot. It shows... This suggests...
-
-@fig-stanareyouokay-2 is a Rhat plot. It shows... This suggests...
-
-```{r}
-#| echo: false
-#| eval: true
-#| message: false
-#| warning: false
-#| label: fig-stanareyouokay
-#| fig-cap: "Checking the convergence of the MCMC algorithm"
-#| fig-subcap: ["Trace plot", "Rhat plot"]
-#| layout-ncol: 2
-
-#plot(first_model, "trace")
-
-#plot(first_model, "rhat")
-```
-
-
-
-\newpage
-
 
 # References
+
+
+
+
+# Model
+To investigate the factors influencing voting behavior within the Cooperative Election Study (CES) 2020 dataset, we employed a logistic regression model, leveraging the "rstanarm" package for its Bayesian inference capabilities. This choice allows for a more nuanced interpretation of results, incorporating prior beliefs and providing probabilistic estimates of the parameters. Secondly, this model aims to unpack the impact of demographic variables such as race and income on the probability of an individual casting a vote, framed within a binary outcome (voted vs. did not vote). The overarching goal of the modeling strategy is to distill the complex interplay of these demographic variables, helping our understanding of voting behaviors.
+
+## Model set-up
+
+Define $y_i$ as the political preference of the respondent and equal to 1 if Biden and 0 if Trump. Then $\mbox{race}_i$ is the race of the respondent and $\mbox{income}_i$ is the income of the respondent.  
+
+\[
+\begin{aligned}
+y_i|\pi_i & \sim \text{Bern}(\pi_i) \\
+\text{logit}(\pi_i) & = \beta_0 + \beta_1 \times \text{race}_i + \beta_2 \times \text{income}_i \\
+\beta_0 & \sim \text{Normal}(0, 2.5) \\
+\beta_1 & \sim \text{Normal}(0, 2.5) \\
+\beta_2 & \sim \text{Normal}(0, 2.5)
+\end{aligned}
+\]
+
+We run the model in R [@citeR] using the `rstanarm` package of @rstanarm. We use the default priors from `rstanarm`.
+
+
+### Model justification
+For the model, we expect more minorities to vote for Biden based on his campaign. We also expect there to be a considerable effect of income. We intend to investigate if there is a significant relationship between these demographic factors and how they influence the probability of individuals voting for a particular candidate. To convey these relationships mathematically, we can represent them using LaTeX within dollar signs, such as $\beta_1$ for the effect of race and $\beta_2$ for the effect of income.
+
 
 
