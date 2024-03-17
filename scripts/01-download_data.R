@@ -12,7 +12,7 @@
 library(tidyverse)
 
 #### Download data ####
-# ces2020_data <- read_csv("/Users/victortimir/Downloads/dataverse_files/CES20_Common_OUTPUT_vv.csv")
+# ces2020_data <- read_csv("/Users/victortimir/2020-US-Political-Support/data/CES20_Common_OUTPUT_vv.csv)
 # This file is too big to add to this folder and to github. 
 # Follow above instructions and add the file to the specified filepath
          
